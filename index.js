@@ -154,6 +154,8 @@ wsServer.on('connection', (clientConnection, req) => {
     else disconnectUser(user);
 });
 
+console.log('Server script executed');
+
 /* wsServer.on('connection', (client, req) => {
     console.log(`Client connected with ${req.url}`);
     const params = new Proxy(new URLSearchParams(req.url), {
