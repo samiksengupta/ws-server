@@ -77,6 +77,12 @@ function disconnectUser(user) {
     console.log(`${user.name} disconnected`);
 }
 
+wsServer.on('error', err => console.log(err));
+
+wsServer.on('listening', () => {
+    console.log('WS Listening on port 443');
+});
+
 wsServer.on('connection', (clientConnection, req) => {
     console.log(`Client connected with ${req.url}`);
     const params = new URLSearchParams(url.parse(req.url).query);
