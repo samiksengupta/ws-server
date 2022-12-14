@@ -1,10 +1,10 @@
-// const express = require('express');
+const express = require('express');
+const http = require("http");
 const WebSocket = require('ws');
 const { v4: uuidv4 } = require('uuid');
 const url = require('node:url');
 
-const wsServer = new WebSocket.Server({ port: 443 });
-
+const port = process.env.PORT || 3000;
 const rooms = [];
 
 function createRoom(name, maxUsers = 4) {
@@ -77,10 +77,16 @@ function disconnectUser(user) {
     console.log(`${user.name} disconnected`);
 }
 
+const app = express();
+const httpServer = http.createServer(app);
+const wsServer = new WebSocket.Server({ server: httpServer });
+
+app.get("/", (req, res) => { res.status(200).send('<h1>You have reached the Web service successfully!</h1><p>Please connect to WebSocket server from a WebSocket client for more features.</p>'); });
+
 wsServer.on('error', err => console.log(err));
 
 wsServer.on('listening', () => {
-    console.log('WS Listening on port 443');
+    console.log('WS Listening');
 });
 
 wsServer.on('connection', (clientConnection, req) => {
@@ -154,7 +160,7 @@ wsServer.on('connection', (clientConnection, req) => {
     else disconnectUser(user);
 });
 
-console.log('Server script executed');
+httpServer.listen(port, () => { console.log("Server started. Port: ", port); });
 
 /* wsServer.on('connection', (client, req) => {
     console.log(`Client connected with ${req.url}`);
