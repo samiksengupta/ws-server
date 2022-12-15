@@ -115,7 +115,7 @@ wsServer.on('connection', (clientConnection, req) => {
 
                 broadcastToRoom(room, {
                     action: 'UPDATE_PARTICIPANTS',
-                    participants: getRoomUsers(),
+                    participants: getRoomUsers(room),
                     notice: `${user.name} left the room`
                 });
             });
@@ -130,7 +130,7 @@ wsServer.on('connection', (clientConnection, req) => {
                         updateUserLocation(user, clientData.location);
                         broadcastToRoom(room, {
                             action: 'UPDATE_PARTICIPANTS',
-                            participants: getRoomUsers(),
+                            participants: getRoomUsers(room),
                             notice: null
                         });
                         break;
@@ -160,7 +160,7 @@ wsServer.on('connection', (clientConnection, req) => {
 
             broadcastToRoom(room, {
                 action: 'UPDATE_PARTICIPANTS',
-                participants: getRoomUsers(),
+                participants: getRoomUsers(room),
                 notice: `${user.name} joined the room`
             });
 
