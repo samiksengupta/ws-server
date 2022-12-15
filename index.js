@@ -50,7 +50,7 @@ function removeFromRoom(name, user) {
 function getRoomUsers(name) {
     const room = rooms.find(r => r.name === name);
     if(room) {
-        return room.users.map(u => ({ uuid: u.uuid, name: u.name }));
+        return room.users.map(u => ({ uuid: u.uuid, name: u.name, location: u.location }));
     }
     return [];
 }
