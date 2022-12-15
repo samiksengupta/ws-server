@@ -175,41 +175,4 @@ wsServer.on('connection', (clientConnection, req) => {
     else disconnectUser(user);
 });
 
-httpServer.listen(port, () => { console.log("Server started. Port: ", port); });
-
-/* wsServer.on('connection', (client, req) => {
-    console.log(`Client connected with ${req.url}`);
-    const params = new Proxy(new URLSearchParams(req.url), {
-        get: (searchParams, prop) => searchParams.get(prop),
-    });
-    if(!params.room) client.close();
-    client.uuid = uuidv4();
-    participants.push({
-        uuid: client.uuid,
-        name: params.name,
-        room: params.room,
-        client: client,
-    });
-    client.on('error', () => console.log('Error occured'));
-    client.on('close', () => {
-        console.log('Client disconnected')
-        participants.splice(participants.findIndex(p => p.uuid === client.uuid), 1);
-        wsServer.clients.forEach(connectedClient => {
-            if(connectedClient.readyState === WebSocket.OPEN) connectedClient.send(JSON.stringify({ participants: participants.map(p => ({ uuid: p.uuid, name: p.name })), action: 'PARTICIPANT_UPDATE' }), { binary: false });
-        });
-    });
-    client.on('message', data => {
-        const message = {
-            message: JSON.parse(data),
-            action: 'MESSAGE'
-        };
-        console.log(message);
-        wsServer.clients.forEach(connectedClient => {
-            if(connectedClient.readyState === WebSocket.OPEN) connectedClient.send(JSON.stringify(message), { binary: false });
-        });
-    });
-    wsServer.clients.forEach(connectedClient => {
-        if(connectedClient.readyState === WebSocket.OPEN) connectedClient.send(JSON.stringify({ participants: participants.map(p => ({ uuid: p.uuid, name: p.name })), action: 'PARTICIPANT_UPDATE' }), { binary: false });
-    });
-    client.send(JSON.stringify({ id: client.uuid, action: 'REGISTER' }), { binary: false });
-}) */
+httpServer.listen(port, () => { console.log("Server started. Port: ", port); });y
