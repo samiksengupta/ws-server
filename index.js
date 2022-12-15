@@ -77,6 +77,10 @@ function disconnectUser(user) {
     console.log(`${user.name} disconnected`);
 }
 
+function updateUserLocation(user, location) {
+    user.location = location;
+}
+
 const app = express();
 const httpServer = http.createServer(app);
 const wsServer = new WebSocket.Server({ server: httpServer });
@@ -95,6 +99,10 @@ wsServer.on('connection', (clientConnection, req) => {
     const user = {
         uuid: uuidv4(),
         name: params.get('name').trim() ?? 'Anonymous',
+        location: {
+            latitude: 0,
+            longitude: 0
+        },
         client: clientConnection
     }
     const room = params.get('room').trim();
@@ -118,6 +126,14 @@ wsServer.on('connection', (clientConnection, req) => {
                 const clientData = JSON.parse(data);
 
                 switch(clientData.action) {
+                    case 'MOVING': 
+                        updateUserLocation(user, clientData.location);
+                        broadcastToRoom(room, {
+                            action: 'UPDATE_PARTICIPANTS',
+                            participants: getRoomUsers(),
+                            notice: null
+                        });
+                        break;
                     case 'TYPING': 
                         broadcastToRoom(room, {
                             action: 'DISPLAY_CLIENT_ACTION',
@@ -132,7 +148,6 @@ wsServer.on('connection', (clientConnection, req) => {
                         });
                         break;
                     case 'DISCONNECTING':
-                        
                         broadcastToUser(user, {
                             action: 'GOODBYE',
                             notice: `Left ${room}`
